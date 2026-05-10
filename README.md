@@ -74,6 +74,30 @@ stable-matching-optimization/
 
 ---
 
+## Updated Project (`Updated-project` branch)
+
+The `Updated-project` branch contains an improved version of the same stable matching project, while the original notebook-based implementation remains preserved on the `main` branch.
+
+### Updated project files
+
+```text
+stable-matching-optimization/
+├── stable_matching.jl      # Julia implementation
+├── visualise (2).py        # Python visualisation script
+└── dashboard_gs.html       # HTML dashboard
+```
+
+### Branch structure
+
+| Branch | Purpose |
+|---|---|
+| `main` | Original notebook-based stable matching model |
+| `Updated-project` | Improved project version with separate source, visualisation, and dashboard files |
+
+To view the improved version on GitHub, use the branch selector and choose `Updated-project`.
+
+---
+
 ## Key Concepts
 
 **Stable Matching** — A matching is stable if no unmatched donor-patient pair both prefer each other over their current assignment. Based on the Gale-Shapley algorithm extended to MILP formulation for scalability.
