@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stable Matching Dashboard</title>
+  <style>
+    :root {
+      --bg: #f5f1eb;
+      --panel: #fffaf5;
+      --ink: #2a211c;
+      --muted: #6e625a;
+      --accent: #8b0000;
+      --accent-2: #1a3a5c;
+      --line: #dfd5ca;
+      --warm: #c48a00;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Trebuchet MS", serif;
+      background:
+        radial-gradient(circle at top left, rgba(196,138,0,0.12), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(139,0,0,0.10), transparent 30%),
+        var(--bg);
+      color: var(--ink);
+    }
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+    .hero {
+      background: linear-gradient(135deg, rgba(139,0,0,0.96), rgba(26,58,92,0.96));
+      color: white;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(42,33,28,0.12);
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+      letter-spacing: 0.03em;
+    }
+    .hero p {
+      margin: 0;
+      max-width: 850px;
+      color: rgba(255,255,255,0.88);
+      line-height: 1.5;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 14px;
+      margin: 20px 0 26px;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px 18px;
+      box-shadow: 0 10px 24px rgba(42,33,28,0.05);
+    }
+    .stat .k {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat .l {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 4px;
+    }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .tab-btn {
+      border: 0;
+      background: #eadfd3;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: white;
+    }
+    .tab {
+      display: none;
+    }
+    .tab.active {
+      display: block;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 12px 28px rgba(42,33,28,0.06);
+    }
+    .card h3 {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 1.05rem;
+    }
+    .card p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    img, iframe {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+    }
+    iframe {
+      min-height: 560px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.94rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+    }
+    th {
+      color: var(--accent-2);
+    }
+    .note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    @media (max-width: 720px) {
+      .hero h1 { font-size: 1.6rem; }
+      .wrap { padding: 18px 14px 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Stable Matching Admissions Dashboard</h1>
+      <p>This dashboard explains both the final admissions result and how the flexible Gale-Shapley process unfolds round by round. It supports partial rankings, dynamic applicant batches, and fairness auditing.</p>
+    </section>
+
+    <section class="stats">
+      <div class="stat"><div class="k">16,200</div><div class="l">Applicants</div></div>
+      <div class="stat"><div class="k">15,363</div><div class="l">Admitted</div></div>
+      <div class="stat"><div class="k">837</div><div class="l">Unmatched</div></div>
+      <div class="stat"><div class="k">1.53</div><div class="l">Average admitted choice rank</div></div>
+      <div class="stat"><div class="k">17</div><div class="l">Proposal rounds</div></div>
+      <div class="stat"><div class="k">26,300</div><div class="l">Total proposals traced</div></div>
+    </section>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="overview">Overview</button>
+      <button class="tab-btn" data-tab="process">Process</button>
+      <button class="tab-btn" data-tab="fairness">Fairness</button>
+      <button class="tab-btn" data-tab="explainer">Explainer</button>
+    </nav>
+
+    <section id="overview" class="tab active">
+      <div class="grid">
+        <div class="card">
+          <h3>Fill Rates</h3>
+          <p>How many seats each university filled under the final matching.</p>
+          <img src="fill_rate_gs.png" alt="University fill rates">
+        </div>
+        <div class="card">
+          <h3>Choice Outcomes</h3>
+          <p>How often students received their first, second, or later ranked school.</p>
+          <img src="choice_rank_gs.png" alt="Choice-rank distribution">
+        </div>
+        <div class="card">
+          <h3>Rank Points by University</h3>
+          <p>Distribution of admitted student rank points across universities.</p>
+          <img src="rp_by_uni_gs.png" alt="Rank points by university">
+        </div>
+        <div class="card">
+          <h3>Flow From Preference to Assignment</h3>
+          <p>Interactive Sankey showing how admitted students moved from their choice rank to the assigned university.</p>
+          <iframe src="sankey_gs.html" title="Sankey diagram"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section id="process" class="tab">
+      <div class="grid">
+        <div class="card">
+          <h3>Round-by-Round Animation</h3>
+          <p>The tentative holds evolve as proposals and rejections propagate through the market.</p>
+          <img src="round_animation_gs.gif" alt="Round animation">
+        </div>
+        <div class="card">
+          <h3>Proposal Activity</h3>
+          <p>Each round shows how many proposals were made and how much churn happened through rejections and displacements.</p>
+          <img src="round_activity_gs.png" alt="Round activity">
+        </div>
+        <div class="card">
+          <h3>Acceptance Rate</h3>
+          <p>Later rounds usually get tougher as popular schools fill up and students fall back to lower choices.</p>
+          <img src="round_acceptance_rate_gs.png" alt="Acceptance rate by round">
+        </div>
+        <div class="card">
+          <h3>University Pressure Heatmap</h3>
+          <p>This highlights which universities receive the most pressure in each round.</p>
+          <img src="university_pressure_gs.png" alt="University pressure heatmap">
+        </div>
+      </div>
+    </section>
+
+    <section id="fairness" class="tab">
+      <div class="grid">
+        <div class="card">
+          <h3>Group Audit Chart</h3>
+          <p>Admission rates by group make it easier to spot potential disparities that deserve investigation.</p>
+          <img src="group_audit_gs.png" alt="Group admission audit">
+        </div>
+        
+        <div class="card">
+          <h3>Fairness Snapshot</h3>
+          <table>
+            <thead><tr><th>Group</th><th>Applicants</th><th>Admitted</th><th>Rate</th></tr></thead>
+            <tbody>
+        <tr><td>all</td><td>16200</td><td>15363</td><td>94.8%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        
+      </div>
+      <div class="note">This audit is descriptive, not a guarantee of fairness. If you need stronger protections, the next step is to add explicit fairness constraints or policy rules into the matching model.</div>
+    </section>
+
+    <section id="explainer" class="tab">
+      <div class="grid">
+        <div class="card">
+          <h3>Model Flow</h3>
+          <p>The remodel separates applicant scores, eligibility, preference building, and matching so the system can handle partial rankings and later applicant waves.</p>
+          <img src="model_flow_gs.png" alt="Model flow diagram">
+        </div>
+        <div class="card">
+          <h3>What This Model Can Explain</h3>
+          <p>Use the dashboard to tell four connected stories: who got in, how the rounds evolved, where competition was strongest, and whether different groups saw different outcomes.</p>
+          <p>For dynamic admissions, you can also export round-specific result and trace files from Julia and reuse this same visual pattern for each batch.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.tab-btn');
+    const tabs = document.querySelectorAll('.tab');
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        buttons.forEach((b) => b.classList.remove('active'));
+        tabs.forEach((t) => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
