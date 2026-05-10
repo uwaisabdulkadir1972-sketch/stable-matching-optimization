@@ -78,21 +78,69 @@ stable-matching-optimization/
 
 The `Updated-project` branch contains an improved version of the same stable matching project, while the original notebook-based implementation remains preserved on the `main` branch.
 
+### What the updated version adds
+
+- A standalone Julia pipeline in `stable_matching.jl`
+- CSV exports for downstream analysis
+- A Python visualisation script in `visualise (2).py`
+- An HTML dashboard for presenting the Gale-Shapley results
+
 ### Updated project files
 
 ```text
 stable-matching-optimization/
-├── stable_matching.jl      # Julia implementation
+├── stable_matching.jl      # Julia implementation and CSV export pipeline
 ├── visualise (2).py        # Python visualisation script
 └── dashboard_gs.html       # HTML dashboard
 ```
+
+### How to run the updated version
+
+**1. Switch to the updated branch:**
+```bash
+git switch Updated-project
+```
+
+**2. Install the Julia packages** — run in Julia REPL:
+```julia
+using Pkg
+Pkg.add("JuMP")
+Pkg.add("HiGHS")
+Pkg.add("DataFrames")
+Pkg.add("CSV")
+Pkg.add("StatsBase")
+```
+
+**3. Run the Julia matching pipeline:**
+```bash
+julia stable_matching.jl
+```
+
+This generates the matching outputs used by the visualisation step, including CSV files such as:
+- `students.csv`
+- `universities.csv`
+- `results_gs.csv`
+- `trace_gs.csv`
+
+**4. Install the Python visualisation packages:**
+```bash
+python -m pip install pandas matplotlib plotly kaleido pillow
+```
+
+**5. Generate the charts and dashboard assets:**
+```bash
+python "visualise (2).py"
+```
+
+**6. Open the dashboard:**
+Open the generated HTML dashboard in a browser to view the results and visualisations.
 
 ### Branch structure
 
 | Branch | Purpose |
 |---|---|
 | `main` | Original notebook-based stable matching model |
-| `Updated-project` | Improved project version with separate source, visualisation, and dashboard files |
+| `Updated-project` | Improved project version with standalone code, visualisations, and dashboard |
 
 To view the improved version on GitHub, use the branch selector and choose `Updated-project`.
 
